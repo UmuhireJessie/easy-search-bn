@@ -14,17 +14,15 @@ const declareSchema = new mongoose.Schema(
     },
     phone: {
       type: Number,
-
     },
     cardNumber: {
-        type: Number,
-  
-      },
-      cardType: {
-        type: String,
-        required: true,
-      },
-  
+      type: Number,
+    },
+    cardType: {
+      type: String,
+      required: true,
+    },
+
     location: {
       type: String,
       required: true,

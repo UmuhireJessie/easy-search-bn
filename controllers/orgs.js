@@ -8,15 +8,6 @@ import jwt from "jsonwebtoken"
 export const createOrg = async (req, res) => {
   const email = req.body.email;
 
-  // const existingOrg = await Org.findOne({ email: email });
-
-  // if (existingOrg) {
-  //   return res.status(409).json({
-  //     success: false,
-  //     data: { message: "An organisation with this email already exist" },
-  //   });
-  // }
-
   try {
     // hash the password
     const salt = await bcrypt.genSalt(10);
@@ -29,7 +20,7 @@ export const createOrg = async (req, res) => {
       password: hashedPassword,
     });
     const org = await Org.create(Obj);
-    res.status(201).json({ success: true, data :{message: "Your organisation successfully registed"} });
+    res.status(201).json({ success: true, data :{message: "Your organisation successfully registed", Obj } });
   } catch (error) {
     console.log(error);
 
@@ -39,10 +30,6 @@ export const createOrg = async (req, res) => {
     });
   }
 };
-
-
-
-
 
 
 // login a user
@@ -55,7 +42,7 @@ export const loginOrg = async (req, res) => {
   if (!org) {
     return res.status(400).json({
       success: false,
-      data: { message: "No organisation with this email exists" },
+      data: { message: "Incorrect email or password" },
     });
   }
 
@@ -63,7 +50,7 @@ export const loginOrg = async (req, res) => {
   if (!isMatch) {
     return res.status(400).json({
       success: false,
-      data: { message: "Incorrect password" },
+      data: { message: "Incorrect email or password" },
     });
   }
 
@@ -83,3 +70,22 @@ export const loginOrg = async (req, res) => {
   });
 };
 
+// Get all registered organisation
+export const getAllOrganisation = async(req, res) => {
+
+  try {
+    const allOrg = await Org.find();
+    return res.status(200).json({
+      success: true,
+      data: {allOrg},
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      data: { error: error.message },
+    });
+  }
+
+}

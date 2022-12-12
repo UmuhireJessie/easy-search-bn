@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { cloudinaryConfig } from "./middlewares/upload.js";
 import orgRouter from "./routes/orgs.js";
 import declareRouter from "./routes/declare.js";
+import docRouter from "./routes/document.js";
 
 
 const port = process.env.PORT || "3001";
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/orgs", orgRouter);
 app.use("/api/declare", declareRouter);
+app.use("/api/document", docRouter);
 
 app.all("*", (req, res) => {
   return res.sendStatus(404);
