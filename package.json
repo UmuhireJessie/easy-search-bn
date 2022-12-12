@@ -1,0 +1,50 @@
+{
+  "name": "myblog",
+  "engines": {
+    "node": "16.x"
+  },
+  "version": "1.0.0",
+  "description": "big project",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "nyc --reporter=html --reporter=text mocha --timeout 50000 --coverage --all --exit",
+    "start": "node app.js",
+    "dev": "nodemon ./app"
+  },
+  "keywords": [
+    "api",
+    "blog"
+  ],
+  "author": "Delyce",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "chai": "^4.3.4",
+    "cloudinary": "^1.29.0",
+    "cors": "^2.8.5",
+    "datauri": "^4.1.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.14.0",
+    "http-errors": "^2.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^9.2.0",
+    "mongodb": "^4.3.0",
+    "mongoose": "^6.1.6",
+    "multer": "^1.4.4",
+    "mysql2": "^2.2.5",
+    "nodemailer": "^6.7.2",
+    "sequelize": "^6.6.2",
+    "sequelize-auto": "^0.8.2",
+    "swagger": "^0.7.5",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.3.0"
+  },
+  "devDependencies": {
+    "coverage": "^0.4.1",
+    "coveralls": "^3.1.1",
+    "nodemon": "^2.0.15",
+    "nyc": "^15.1.0"
+  }
+}
