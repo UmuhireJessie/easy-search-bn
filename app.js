@@ -3,7 +3,6 @@ import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
-import { cloudinaryConfig } from "./middlewares/upload.js";
 import orgRouter from "./routes/orgs.js";
 import declareRouter from "./routes/declare.js";
 import docRouter from "./routes/document.js";
@@ -16,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cloudinaryConfig);
+
 
 
 app.get("/", (req, res) => {
