@@ -10,7 +10,6 @@ const declareSchema = new mongoose.Schema(
       type: String,
       required: true,
       lowercase: true,
-      unique: true,
     },
     phone: {
       type: Number,

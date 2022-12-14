@@ -19,6 +19,7 @@
   "author": "Delyce",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
     "bcryptjs": "^2.4.3",
     "chai": "^4.3.4",
     "cloudinary": "^1.29.0",

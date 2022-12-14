@@ -1,5 +1,7 @@
 import documentSchema from "../models/document.js";
 import { Org } from "../models/orgs.js";
+import { Declare } from "../models/declare.js";
+import sendEmail from "../helper/sendEmail.js";
 
 // Adding new missing documents
 const addDocument = async (req, res) => {
@@ -21,7 +23,13 @@ const addDocument = async (req, res) => {
       });
     }
 
-
+    const organization = await Org.findById(ownerId);
+    if (!organization) {
+      return res.status(404).json({
+        success: false,
+        data: { message: `No organisation found with ID: ${ownerId}` },
+      });
+    }
 
     const newDoc = await documentSchema.create({
       nameOnDoc,
@@ -33,14 +41,49 @@ const addDocument = async (req, res) => {
       orgDocument: ownerId,
     });
 
-    const organization = await Org.findById(ownerId);
-    if (!organization) {
-      return res.status(404).json({
-        success: false,
-        data: { message: `No organisation found with ID: ${ownerId}` },
-      });
-    }
     organization.documents.push(newDoc);
+
+    const docDeclared = await Declare.find({
+      $and: [
+        { cardNumber: { $eq: cardNumber } },
+        { names: { $eq: nameOnDoc } },
+      ],
+    });
+
+    console.log("docDeclared", docDeclared);
+    let to = [];
+    const subject = "Document has been found";
+    const html = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Your Email Title Here</title>
+        <style>
+          /* CSS styles to be identified */
+        </style>
+      </head>
+      <body>
+        <div>
+          <h1>Hello</h1>
+          <p>
+            We want to notify you that your document has been found.Please
+            visit our wesite to claim it
+          </p>
+          <a href="http://localhost:3000/available-docs">
+            Visit our website to claim your document
+          </a>
+        </div>
+      </body>
+    </html>
+
+    `;
+    const data = {to, subject, html}
+    if (docDeclared) {
+      for (let i = 0; i < docDeclared.length; i++) {
+        to.push(docDeclared[i].email);
+      }
+      sendEmail(data)
+    }
 
     await organization.save().then((orgDoc) => {
       return res.status(201).json({
@@ -175,4 +218,10 @@ const updateDocument = async (req, res) => {
   }
 };
 
-export { addDocument, getAllDocument, getOrgDocuments, deleteDocument, updateDocument };
+export {
+  addDocument,
+  getAllDocument,
+  getOrgDocuments,
+  deleteDocument,
+  updateDocument,
+};
