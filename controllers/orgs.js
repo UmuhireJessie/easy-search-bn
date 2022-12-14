@@ -95,9 +95,18 @@ export const getAllOrganisation = async (req, res) => {
 
 // Logout an organisation
 export const logout = async (req, res) => {
+  let token = req.headers.authorization.split(" ")[1];
   try {
-    console.log("I need a loggout")
-  } catch (error) {
-    console.log(error)
+    let randomNumberToAppend = toString(Math.floor(Math.random() * 1000 + 1));
+
+    let hashedRandomNumberToAppend = await bcrypt.hash(
+      randomNumberToAppend,
+      10
+    );
+
+    token = token + hashedRandomNumberToAppend;
+    return res.status(200).json("Logout successfully");
+  } catch (err) {
+    return res.status(500).json(err.message);
   }
 };
