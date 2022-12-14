@@ -1,8 +1,6 @@
 import { Org } from "../models/orgs.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken"
-
-
+import jwt from "jsonwebtoken";
 
 // create a new user
 export const createOrg = async (req, res) => {
@@ -20,17 +18,21 @@ export const createOrg = async (req, res) => {
       password: hashedPassword,
     });
     const org = await Org.create(Obj);
-    res.status(201).json({ success: true, data :{message: "Your organisation successfully registed", Obj } });
+    res
+      .status(201)
+      .json({
+        success: true,
+        data: { message: "Your organisation successfully registed", Obj },
+      });
   } catch (error) {
     console.log(error);
 
-    res.status(404).json({
+    res.status(400).json({
       success: false,
-      data: { message: error.properties },
+      data: { message: error.message },
     });
   }
 };
-
 
 // login a user
 export const loginOrg = async (req, res) => {
@@ -64,20 +66,22 @@ export const loginOrg = async (req, res) => {
   // send json response
   res.status(200).json({
     success: true,
-    data: {message: "successfully logged in",
-          email: req.body.email},
+    data: {
+      message: "successfully logged in",
+      _id: org._id,
+      email: req.body.email
+    },
     token: authToken,
   });
 };
 
 // Get all registered organisation
-export const getAllOrganisation = async(req, res) => {
-
+export const getAllOrganisation = async (req, res) => {
   try {
     const allOrg = await Org.find();
     return res.status(200).json({
       success: true,
-      data: {allOrg},
+      data: { allOrg },
     });
   } catch (error) {
     console.log(error);
@@ -87,5 +91,4 @@ export const getAllOrganisation = async(req, res) => {
       data: { error: error.message },
     });
   }
-
-}
+};
