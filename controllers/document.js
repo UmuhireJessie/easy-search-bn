@@ -21,6 +21,8 @@ const addDocument = async (req, res) => {
       });
     }
 
+
+
     const newDoc = await documentSchema.create({
       nameOnDoc,
       cardType,
@@ -51,7 +53,7 @@ const addDocument = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      data: { error: error.message },
+      data: { error: error.message, message: "Failed to add document" },
     });
   }
 };
