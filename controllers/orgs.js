@@ -34,7 +34,7 @@ export const createOrg = async (req, res) => {
   }
 };
 
-// login a user
+// login an organisation
 export const loginOrg = async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -60,7 +60,7 @@ export const loginOrg = async (req, res) => {
   let authToken = jwt.sign(
     { email: org.email, id: org._id },
     process.env.AUTH_KEY,
-    { expiresIn: "1h" }
+    { expiresIn: "1d" }
   );
 
   // send json response
@@ -90,5 +90,14 @@ export const getAllOrganisation = async (req, res) => {
       success: false,
       data: { error: error.message },
     });
+  }
+};
+
+// Logout an organisation
+export const logout = async (req, res) => {
+  try {
+    console.log("I need a loggout")
+  } catch (error) {
+    console.log(error)
   }
 };

@@ -125,7 +125,8 @@ const getOrgDocuments = async (req, res) => {
     const orgId = req.params.id;
     const allOrgDocuments = await Org.findById(orgId).populate("documents");
 
-    return res.status(200).json({
+    if(allOrgDocuments) {
+      return res.status(200).json({
       success: true,
       data: {
         orgName: allOrgDocuments.orgName,
@@ -133,6 +134,16 @@ const getOrgDocuments = async (req, res) => {
         count: allOrgDocuments.documents.length,
       },
     });
+    }
+
+    return res.status(404).json({
+      success: true,
+      data: {
+        message: "Organisation does not found"
+      },
+    })
+
+    
   } catch (error) {
     console.log(error);
 
