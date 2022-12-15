@@ -10,3 +10,4 @@ declareRouter.post("/", declareDoc);
 declareRouter.get("/", getMissingDocs);
 
 
+export default declareRouter
