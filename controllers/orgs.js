@@ -1,10 +1,8 @@
 import { Org } from "../models/orgs.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
-
-
-
+// create a new user
 export const createOrg = async (req, res) => {
   const email = req.body.email;
 
@@ -20,18 +18,23 @@ export const createOrg = async (req, res) => {
       password: hashedPassword,
     });
     const org = await Org.create(Obj);
-    res.status(201).json({ success: true, data :{message: "Your organisation successfully registed"} });
+    res
+      .status(201)
+      .json({
+        success: true,
+        data: { message: "Your organisation successfully registed", Obj },
+      });
   } catch (error) {
     console.log(error);
 
-    res.status(404).json({
+    res.status(400).json({
       success: false,
-      data: { message: error.properties },
+      data: { message: error.message },
     });
   }
 };
 
-
+// login an organisation
 export const loginOrg = async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -41,7 +44,7 @@ export const loginOrg = async (req, res) => {
   if (!org) {
     return res.status(400).json({
       success: false,
-      data: { message: "No organisation with this email exists" },
+      data: { message: "Incorrect email or password" },
     });
   }
 
@@ -49,7 +52,7 @@ export const loginOrg = async (req, res) => {
   if (!isMatch) {
     return res.status(400).json({
       success: false,
-      data: { message: "Incorrect password" },
+      data: { message: "Incorrect email or password" },
     });
   }
 
@@ -57,15 +60,53 @@ export const loginOrg = async (req, res) => {
   let authToken = jwt.sign(
     { email: org.email, id: org._id },
     process.env.AUTH_KEY,
-    { expiresIn: "1h" }
+    { expiresIn: "1d" }
   );
 
   // send json response
   res.status(200).json({
     success: true,
-    data: {message: "successfully logged in",
-          email: req.body.email},
+    data: {
+      message: "successfully logged in",
+      _id: org._id,
+      email: req.body.email
+    },
     token: authToken,
   });
 };
 
+// Get all registered organisation
+export const getAllOrganisation = async (req, res) => {
+  try {
+    const allOrg = await Org.find();
+    return res.status(200).json({
+      success: true,
+      data: { allOrg },
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      data: { error: error.message },
+    });
+  }
+};
+
+// Logout an organisation
+export const logout = async (req, res) => {
+  let token = req.headers.authorization.split(" ")[1];
+  try {
+    let randomNumberToAppend = toString(Math.floor(Math.random() * 1000 + 1));
+
+    let hashedRandomNumberToAppend = await bcrypt.hash(
+      randomNumberToAppend,
+      10
+    );
+
+    token = token + hashedRandomNumberToAppend;
+    return res.status(200).json("Logout successfully");
+  } catch (err) {
+    return res.status(500).json(err.message);
+  }
+};

@@ -1,9 +1,12 @@
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+
+
 dotenv.config();
+
 export function authenticate(req, res, next) {
   if (!req.headers.authorization) {
-    return res.status(400).json({
+    return res.status(401).json({
       message: "Missing auth header",
     });
   }
@@ -21,7 +24,7 @@ export function authenticate(req, res, next) {
     });
   } catch (err) {
     console.log(err);
-    res.status(401).json({
+    return res.status(401).json({
       success: false,
       message: "Authentication failed!",
     });
